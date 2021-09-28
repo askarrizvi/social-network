@@ -1,5 +1,6 @@
 const { Thought, User } = require('../models');
 
+//Controller that will determine what each route does for the thought model
 const thoughtController = {
     //Get all thoughts
     getAllThoughts(req, res) {
@@ -11,6 +12,7 @@ const thoughtController = {
             });
     },
 
+    //Get a thought by its ID
     getThoughtById({ params }, res) {
         Thought.findOne({ _id: params.thoughtId })
             .then(dbThoughtData => {
@@ -26,6 +28,7 @@ const thoughtController = {
             });
     },
 
+    //Create a new thought
     createThought({ body }, res) {
         Thought.create(body)
             .then(({ _id }) => {
@@ -48,6 +51,7 @@ const thoughtController = {
             });
     },
 
+    //Update a thought by its ID
     updateThought({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
@@ -64,6 +68,7 @@ const thoughtController = {
             .catch(err => res.status(400).json(err));
     },
 
+    //Delete a thought by its ID
     deleteThought({ params }, res) {
         Thought.findOneAndDelete({ _id: params.thoughtId })
         .then(dbThoughtData => {
@@ -76,6 +81,7 @@ const thoughtController = {
         .catch(err => res.status(400).json(err));
     },
 
+    //Create a new reaction
     createReaction({ params, body }, res) {
         Thought.findOneAndUpdate(
             { _id: params.thoughtId },
@@ -92,6 +98,7 @@ const thoughtController = {
             .catch(err => res.json(err));
     },
 
+    //Delete a reaction by its ID
     deleteReaction({ params }, res){
         Thought.findOneAndUpdate(
             {_id: params.thoughtId},

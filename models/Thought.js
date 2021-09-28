@@ -1,6 +1,7 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require('mongoose');
 const dateFormat = require('../utils/dateFormat');
 
+//Sub document reaction schema within the thought model
 const ReactionSchema = new Schema(
     {
         reactionId: {
@@ -29,6 +30,7 @@ const ReactionSchema = new Schema(
     }
 );
 
+//Main schema for the Thought model
 const ThoughtSchema = new Schema(
     {
         thoughtText: {
@@ -57,6 +59,7 @@ const ThoughtSchema = new Schema(
     }
 );
 
+//Virtual to count the number of reactions a thought has
 ThoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.length;
 });

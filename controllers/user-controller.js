@@ -1,21 +1,11 @@
 const { Thought, User } = require('../models');
 
+//Controller that will determine what each route does for the user model
 const userController = {
+    //Get all user
     getAllUsers(req, res) {
         User.find({})
-            .then(dbUserData => res.json(dbUserData))
-            .catch(err => {
-                console.log(err);
-                res.status(400).json(err);
-            });
-    },
-    getUserById({ params }, res) {
-        User.findOne({ _id: params.userId })
             .populate(
-                {
-                    path: 'thoughts',
-                    select: '-__v'
-                },
                 {
                     path: 'friends',
                     select: '-__v'
@@ -29,6 +19,26 @@ const userController = {
                 res.status(400).json(err);
             });
     },
+
+    //Get a user by its ID
+    getUserById({ params }, res) {
+        User.findOne({ _id: params.userId })
+            .populate(
+                {
+                    path: 'friends',
+                    select: '-__v'
+                }
+            )
+            .select('-__v')
+            .sort({ _id: -1 })
+            .then(dbUserData => res.json(dbUserData))
+            .catch(err => {
+                console.log(err);
+                res.status(400).json(err);
+            });
+    },
+
+    //Create a new user
     createUser({ body }, res) {
         User.create(body)
             .then(dbUserData => res.json(dbUserData))
@@ -37,6 +47,8 @@ const userController = {
                 res.status(400).json(err);
             });
     },
+
+    //Update a user by its ID
     updateUser({ params, body }, res) {
         User.findOneAndUpdate(
             { _id: params.userId },
@@ -55,6 +67,8 @@ const userController = {
                 res.status(400).json(err);
             });
     },
+
+    //Delete a user by its ID
     deleteUser({ params }, res) {
         User.findOneAndDelete({ _id: params.userId })
             .then((dbUserData) => {
@@ -77,6 +91,8 @@ const userController = {
             })
             .catch((err) => res.status(400).json(err));
     },
+
+    //Add an existing user to the friends list
     addFriend({ params }, res) {
         User.findOneAndUpdate(
             { _id: params.userId },
@@ -95,6 +111,8 @@ const userController = {
                 res.status(400).json(err);
             });
     },
+
+    //Delete a user from the friends list
     deleteFriend({ params }, res) {
         User.findOneAndUpdate(
             { _id: params.userId },
